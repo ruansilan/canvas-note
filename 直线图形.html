@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<canvas id="canvas1" width="800" height="600" style="border: 1px dashed gray;"></canvas>
+</body>
+<script type="application/javascript">
+    window.onload = function (){
+        /*
+        * 直线
+        * moveTo：将画笔放至某处
+        * lineTo：移动画笔至某处
+        * stroke：开始描绘
+        * strokeStyle: 可取颜色值、渐变色和图案
+        * */
+        const canvas1 = document.getElementById("canvas1").getContext("2d");
+        canvas1.moveTo(10,80);
+        canvas1.lineTo(80,10);
+        canvas1.strokeStyle = "pink";
+        canvas1.stroke();
+        /*
+        * 矩形
+        * strokeRect：(x，y,width,height)
+        * fillStyle:填充的样式
+        * fillRect：填充的矩形
+        * rect：需配合strock或fill使用方可生效
+        * clearRect:清空矩形(x，y,width,height)
+        * */
+        canvas1.strokeRect(100,10,80,80);
+        canvas1.fillStyle = "pink";
+        canvas1.fillRect(200,10,80,80);
+        canvas1.rect(300,10,80,80);
+        canvas1.stroke();
+        canvas1.clearRect(210,20,20,20)
+        /*
+        * 正多边形
+        * beginPath:开始一条新路径
+        * */
+        function creatPolygon(cxt,n,dx,dy,size){
+            cxt.beginPath();
+            // 求出平均弧度360°=2π
+            const degree = (2*Math.PI)/n;
+            for(let i=0;i<n;i++){
+                cxt.lineTo((Math.cos(i * degree))*size + dx,(Math.sin(i*degree))*size + dy)
+            }
+            cxt.closePath();
+        }
+        creatPolygon(canvas1,3,420,50,50);
+        canvas1.fillStyle = "pink"
+        canvas1.fill();
+        creatPolygon(canvas1,5,520,50,50);
+        canvas1.stroke();
+        /*
+        * 五角星
+        * */
+        function fiveStar(cxt,dx,dy,innerR,outR){
+            cxt.beginPath();
+            for (let i=0;i<5;i++){
+                cxt.lineTo(Math.cos((18 + 72*i)*Math.PI/180)*outR + dx,-Math.sin((18 + 72*i)*Math.PI/180)*outR + dy);
+                cxt.lineTo(Math.cos((54 + 72*i)*Math.PI/180)*innerR + dx,-Math.sin((54 + 72*i)*Math.PI/180)*innerR + dy);
+            }
+            cxt.closePath();
+            cxt.stroke();
+        }
+        fiveStar(canvas1,620,50,25,50);
+        /*
+        * 绘制调色板
+        *
+        * */
+        function palette(cxt,dx,dy){
+            for(let i=0;i<6;i++){
+                for (let j=0;j<6;j++){
+                    cxt.fillStyle = "rgb(" +Math.floor(255 - 42.5 * i) + "," + Math.floor(255 - 42.5 * j) + ",0)";
+                    cxt.fillRect(j*25 + dx,i*25 + dy,25,25)
+                }
+            }
+            cxt.stroke();
+        }
+        palette(canvas1,10,100);
+    }
+</script>
+</html>
