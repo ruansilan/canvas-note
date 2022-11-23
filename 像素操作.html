@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="400" style="border: 1px dashed gray;"></canvas>
+<button id="light">亮度加</button>
+</body>
+<script type="application/javascript">
+    window.onload = function (){
+        const canvas = document.getElementById("canvas").getContext("2d");
+        const light = document.getElementById("light");
+        const img = new Image();
+        img.src = "/images/2.jpg";
+        img.onload = function (){
+            canvas.drawImage(img,10,10);
+            // 反转效果
+            // getImageData(x,y,width,height) 获取图片的像素数据，里面data字段为像素数据数组
+            // data中每4个数存储一个rgba颜色值，分别为红、绿、蓝、透明度
+            let imgData = canvas.getImageData(10,10,150,200);
+            let data = imgData.data;
+            for(let i=0;i<data.length;i+=4){
+                data[i] = 255 - data[i];
+                data[i+1] = 255 - data[i+1];
+                data[i+2] = 255 - data[i+2];
+            }
+            canvas.putImageData(imgData,160,10)
+            //黑白效果，取平均值
+            for(let i=0;i<data.length;i+=4){
+                const average = (data[i] + data[i+1] + data[i+2])/3;
+                data[i] = data[i+1] = data[i+2] = average;
+            }
+            canvas.putImageData(imgData,320,10)
+            // 亮度效果
+            light.onclick = function (){
+                for(let i=0;i<data.length;i+=4){
+                    data[i] +=1;
+                    data[i+1] +=1;
+                    data[i+2] +=1;
+                }
+                canvas.putImageData(imgData,10,10)
+            }
+        }
+    }
+</script>
+</html>

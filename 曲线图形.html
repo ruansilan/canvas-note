@@ -73,8 +73,55 @@
         creatBubble(canvas,600,25)
         /*
         * 三次贝塞尔曲线
-        * bezierCurveTo()
+        * bezierCurveTo(cx1,cy1,cx2,cy2,endX,endY),控制点1，控制点2，结束点
+        * 画心
         * */
+        canvas.moveTo(75,340)
+        canvas.bezierCurveTo(75,337,70,325,50,325);
+        canvas.bezierCurveTo(20,325,20,362.5,20,362.5);
+        canvas.bezierCurveTo(20,380,40,402,75,420);
+        canvas.bezierCurveTo(110,402,130,380,130,362.5);
+        canvas.bezierCurveTo(130,362.5,130,325,100,325);
+        canvas.bezierCurveTo(85,325,75,337,75,340);
+        canvas.fillStyle = "pink";
+        canvas.fill();
+        /*
+        * 画n页草
+        * n：花瓣瓣数
+        * dx,dy:花朵中心位置坐标
+        * size:花瓣的大小
+        * length：花瓣的长度
+        * */
+        function creatLeaf(cxt,n,dx,dy,size,length){
+            cxt.beginPath();
+            cxt.moveTo(dx,dy + size)
+            const degree = 2*Math.PI/n;
+            for(let i = 1;i<n+1;i++){
+                let cx1 = Math.sin((i-1)*degree)*length + dx;
+                let cy1 = Math.cos((i-1)*degree)*length + dy;
+                let cx2 = Math.sin(i*degree)*length + dx;
+                let cy2 = Math.cos(i*degree)*length + dy;
+                let x = Math.sin(i*degree)*size + dx;
+                let y = Math.cos(i*degree)*size + dy;
+                cxt.bezierCurveTo(cx1,cy1,cx2,cy2,x,y)
+            }
+            cxt.closePath();
+            cxt.fillStyle = "#00ff99"
+            cxt.fill();
+        }
+        creatLeaf(canvas,4,300,400,20,80);
+        /*
+        * 绘制扇形
+        * */
+        function creatSector(cxt,x,y,r,angle1,angle2){
+            cxt.beginPath();
+            cxt.moveTo(x,y);
+            cxt.arc(x,y,r,angle1*Math.PI/180,angle2*Math.PI/180,false);
+            cxt.closePath()
+            cxt.fillStyle="yellow"
+            cxt.fill();
+        }
+        creatSector(canvas,280,200,80,30,120);
     }
 </script>
 </html>

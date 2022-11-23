@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<canvas id="canvas" width="450" height="400" style="border: 1px dashed gray;"></canvas>
+<canvas id="canvas1" width="200" height="200" style="border: 1px dashed gray;"></canvas>
+</body>
+<script type="application/javascript">
+    /*
+    * 图片操作
+    * drawImage:绘制图片
+    * */
+    window.onload = function (){
+        const canvas = document.getElementById("canvas").getContext("2d");
+        const canvas1 = document.getElementById("canvas1").getContext("2d");
+        const img = new Image();
+        img.src = "/images/1.jpg";
+
+        // clip：切割图片：1、绘制基本图形 2、使用clip切割 3、绘制图片
+        canvas1.beginPath();
+        canvas1.arc(100,100,80,0,360*Math.PI/180,true);
+        canvas1.closePath();
+        canvas1.stroke();
+        canvas1.clip();
+
+        // 要保证图片加载完成才进行绘制
+        img.onload = function (){
+            // 绘制图片
+            canvas.drawImage(img,10,120);
+            // 平铺图片
+            let pattern = canvas.createPattern(img,"repeat-x");
+            canvas.fillStyle = pattern;
+            canvas.fillRect(0,0,450,100);
+
+            canvas1.drawImage(img,40,40)
+        }
+    }
+</script>
+</html>

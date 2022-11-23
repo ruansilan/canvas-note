@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        div{
+            color: orange;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="600" height="400" style="border: 1px dashed gray;"></canvas>
+</body>
+<script type="application/javascript">
+    /*
+    * 文本操作
+    * strokeText(text,x,y,maxWidth),text:字符串文本，x：文本最左边横坐标，y：文本最下边的纵坐标，maxWidth：允许最大文本的宽度，若文本实际超出则会被压缩
+    * fillText,参数同上
+    * measureText():返回一个包含width属性的对象
+    * font: 定义文本的字体样式，="font-style font-weight font-size/line-height font-family"
+    * textAlign：定义文本水平方向对其方式
+    * textBaseline：定义文本垂直方向对其方式
+    * */
+    window.onload = function (){
+        const cnv = document.getElementById("canvas");
+        const canvas = cnv.getContext("2d");
+        canvas.font="bold 30px 微软雅黑";
+        canvas.strokeStyle="pink";
+        canvas.fillStyle="lightblue";
+        canvas.strokeText("阮思兰",20,50);
+
+        canvas.fillText("阮思兰",20,100);
+
+        const text = "王志坚"
+        const textLen = canvas.measureText(text).width;
+        canvas.fillStyle = "orange"
+        canvas.fillText(text,cnv.width/2 - textLen/2,180);
+
+        canvas.strokeStyle = "purple";
+        canvas.moveTo(120,40);
+        canvas.lineTo(600,40)
+        canvas.stroke();
+        canvas.textBaseline = "alphabetic";
+        canvas.fillText("alphabetic",130,40);
+        canvas.textBaseline = "top";
+        canvas.fillText("top",300,40);
+        canvas.textBaseline = "middle";
+        canvas.fillText("middle",380,40);
+        canvas.textBaseline = "bottom";
+        canvas.fillText("bottom",500,40);
+    }
+</script>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<canvas id="canvas" width="800" height="600" style="border: 1px dashed gray;"></canvas>
+<button id="btn">change</button>
+</body>
+<script type="application/javascript">
+    // transform(a,b,c,d,e,f) 参考上一次变换后的图形状态
+    // setTransform:会重置图形的状态
+    // a: 水平缩放绘图
+    // b: 水平倾斜绘图
+    // c: 垂直倾斜绘图
+    // d: 垂直缩放绘图
+    // e: 水平移动绘图
+    // f: 水平移动绘图
+    window.onload = function (){
+        const ctx = document.getElementById("canvas");
+        const canvas = ctx.getContext("2d");
+        const btn = document.getElementById("btn");
+        canvas.fillStyle = "pink";
+        canvas.fillRect(10,10,100,100);
+        // 默认情况下canvas会把所有绘制的图形都保留下来，故我们需要再绘制新图形前清空整个canvas
+        btn.onclick = function (){
+            canvas.clearRect(0,0,ctx.width,ctx.height);
+            // translate:平移
+            canvas.translate(20,80);
+            // scale:缩放，图形会被缩放，左上角定位、线条宽度也会被缩放，
+            canvas.scale(1.1,1.1);
+            // rotate：旋转，取值[-Math.PI*2 ~ Math.PI*2],负值表示逆时针',默认以坐标原点为中心
+            canvas.rotate(-30*Math.PI/180);
+            canvas.fillRect(10,10,100,100);
+        }
+        // 画彩虹
+        function creatRainbow(cxt){
+            const colors = ["red","orange","yellow","green","Cyan","blue","purple"];
+            cxt.lineWidth = 10;
+            for (let i=0;i<colors.length;i++){
+                cxt.translate(0,10);
+                cxt.strokeStyle = colors[i];
+                cxt.beginPath();
+                cxt.arc(400,200,180,-30*Math.PI/180,-160*Math.PI/180,true);
+                cxt.stroke();
+            }
+        }
+        creatRainbow(canvas)
+    }
+</script>
+</html>
