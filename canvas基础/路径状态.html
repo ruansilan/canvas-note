@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<canvas id="canvas" width="400" height="400" style="border: 1px dashed gray;"></canvas>
+<!--<button id="btn">保存图片</button>-->
+</body>
+<script type="application/javascript">
+    // beginPath：开始一个新路径
+    // 判断开始一个新路径的唯一标准是"是否使用beginPath方法"，而不是视觉上的首尾相连
+    // moveTo、lineTo、strockRect、fillRect、rect、arc、arcTo、quadraticCurveTo、bezierCurveTo
+    // 以上方法只是绘制图形，并不会开始新路径
+    // closePath：关闭路径，将同一个路径的起点和终点连接起来，不等于结束路径，结束路径可用beginPath，即开始一个新路径
+    //            如果canvas只是一条直线，那么closePath就不做处理
+    // isPointInPath：判断某一点是否在当前路径中，不支持strokeRect和fillRect，只支持rect
+    // save():用来保存当前状态
+    // restore():用来恢复之前保存的状态
+    // 主要用于剪切、变形和改变某些属性时,只能保存状态不能保存图形
+    // globalAlpha:用来定义canvas环境的透明度，会对整个画布都起作用，想要实现局部可以rgba颜色值
+    // globalCompositeOperation:设置交叉图形的显示方式
+    window.onload = function (){
+        const cnv = document.getElementById("canvas")
+        const canvas = cnv.getContext("2d");
+        const btn = document.getElementById("btn");
+        canvas.globalAlpha = 0.2;
+        canvas.beginPath();
+        canvas.strokeStyle = "red";
+        canvas.arc(70, 70, 50, 0, -90 * Math.PI / 180, true);
+        canvas.closePath();
+        canvas.stroke();
+
+        canvas.strokeStyle = "blue";
+        canvas.arc(70, 170, 50, 0, -90 * Math.PI / 180, true);
+        canvas.closePath();
+        canvas.stroke();
+
+        canvas.rect(200,100,80,80);
+        canvas.stroke();
+        if(canvas.isPointInPath(200,120)){
+            console.log('yes');
+        }
+        btn.onclick = function (){
+            window.location.href = cnv.toDataURL("image/png");
+        }
+    }
+</script>
+</html>

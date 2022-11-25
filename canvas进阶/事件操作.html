@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<canvas id="canvas" width="400" height="400" style="border: 1px dashed gray;"></canvas>
+<div>鼠标位置：<span id="text"></span></div>
+</body>
+<script src="tool.js"></script>
+<script type="application/javascript">
+    window.onload = function () {
+        // 鼠标事件
+        const cnv = document.getElementById("canvas");
+        const text = document.getElementById("text");
+        const cxt = cnv.getContext("2d");
+        const mouse = tool.getMouse(cnv);
+        cnv.addEventListener("mousemove",function (){
+            text.innerHTML = `(${mouse.x},${mouse.y})`
+        },false)
+        // 键盘事件
+        let x = cnv.width/2;
+        let y = cnv.height/2;
+        tool.drawBall(cxt,x,y)
+        const key = tool.getKey();
+        window.addEventListener("keydown",function (e){
+            cxt.clearRect(0,0,cnv.width,cnv.height);
+            switch (key.direction){
+                case "up":
+                    y -= 2;
+                    tool.drawBall(cxt,x,y);
+                    break;
+                case "down":
+                    y += 2;
+                    tool.drawBall(cxt,x,y);
+                    break;
+                case "left":
+                    x -= 2;
+                    tool.drawBall(cxt,x,y);
+                    break;
+                case "right":
+                    x += 2;
+                    tool.drawBall(cxt,x,y);
+                    break;
+                default:
+                    tool.drawBall(cxt,x,y)
+            }
+        });
+        // 循环事件
+        // canvas动画原理：使用requestAnimationFrame不断清除canvas，然后重新绘制
+        (function frame() {
+            window.requestAnimationFrame(frame);
+            cxt.clearRect(0,0,cnv.width,cnv.height);
+            tool.drawBall(cxt,x,y);
+            if(x<380) x++;
+            else x=0
+        })()
+    }
+</script>
+</html>

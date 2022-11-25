@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<canvas id="canvas" width="400" height="400" style="border: 1px dashed gray;"></canvas>
+</body>
+<script type="application/javascript">
+    window.onload = function (){
+        const canvas = document.getElementById("canvas").getContext("2d");
+        // 线性渐变
+        // createLinearGradient(x,y,x1,y1)创建一个linearGradient对象，参数表示开始和结束渐变的横纵坐标
+        // 创建对象后可n次调用addColorStop(value,color)，每一次皆以前一次颜色开始渐变,value表示开始渐变的位置，取值0～1，
+        const gnt = canvas.createLinearGradient(0,0,200,0);
+        gnt.addColorStop(0,"HotPink");
+        gnt.addColorStop(1,"lightgreen");
+        canvas.fillStyle = gnt;
+        canvas.fillRect(0,0,200,150);
+        //文字渐变
+        canvas.font = "bold 50px 微软雅黑";
+        const gnt1 = canvas.createLinearGradient(210,8,380,80);
+        gnt1.addColorStop(0,"HotPink");
+        gnt1.addColorStop(0.6,"lightSkyBlue");
+        gnt1.addColorStop(1,"lightgreen");
+        canvas.fillStyle = gnt1;
+        canvas.fillText("阮思兰",210,80)
+        // 径向渐变：由内向外的圆形渐变
+        // createRadialGradient(x,y,r,x1,y1,R)参数为两个圆的圆心和半径
+        canvas.beginPath();
+        canvas.arc(80,240,80,0,Math.PI*2);
+        canvas.closePath();
+        const radial = canvas.createRadialGradient(100,220,15,80,240,80);
+        radial.addColorStop(0,"lightgreen");
+        radial.addColorStop(0.4,"yellow");
+        radial.addColorStop(1,"HotPink");
+        canvas.fillStyle = radial;
+        canvas.fill();
+        // 阴影
+        // shadowOffsetX：阴影与图形的水平距离
+        // shadowOffsetY：阴影与图形的垂直距离
+        // 上述两个值设置为0则可实现4个方向都有阴影
+        // shadowColor：阴影颜色，默认黑色
+        // shadowBlur：阴影模糊值，默认0，值越大模糊度越强
+        canvas.shadowColor = "green";
+        canvas.shadowOffsetX = 5;
+        canvas.shadowOffsetY = 5;
+        canvas.shadowBlur = 20;
+        canvas.fillText("好好学习",180,250);
+    }
+</script>
+</html>

@@ -20,13 +20,15 @@
         img.src = "/images/1.jpg";
 
         // clip：切割图片：1、绘制基本图形 2、使用clip切割 3、绘制图片
+        // 注意：使用clip之前，必须在canvas中绘制一个基本图形，这个基本图形就会变成一个剪切区，
+        //      后面绘制的图形如果超出则不会被显示，不支持strokeRect和fillRect，只能使用rect代替
         canvas1.beginPath();
         canvas1.arc(100,100,80,0,360*Math.PI/180,true);
         canvas1.closePath();
         canvas1.stroke();
         canvas1.clip();
 
-        // 要保证图片加载完成才进行绘制
+        //要保证图片加载完成才进行绘制
         img.onload = function (){
             // 绘制图片
             canvas.drawImage(img,10,120);
