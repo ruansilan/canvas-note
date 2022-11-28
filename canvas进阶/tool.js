@@ -45,3 +45,12 @@ window.tool.drawBall = function (cxt,x,y){
     cxt.fillStyle = "pink";
     cxt.fill();
 }
+// 获取随机颜色
+window.tool.getrandomColor = function (){
+    return '#' + (function (color){
+        console.log(color += '0123456789abcdef'[Math.floor(Math.random() * 16)]);
+        return (color += '0123456789abcdef'[Math.floor(Math.random()*16)])
+                && (color.length == 6) ? color : arguments.callee(color)
+    })('')
+}
+window.tool.getrandomColor();

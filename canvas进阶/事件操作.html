@@ -5,19 +5,38 @@
     <title>Title</title>
 </head>
 <body>
-<canvas id="canvas" width="400" height="400" style="border: 1px dashed gray;"></canvas>
+<canvas id="canvas" width="200" height="300" style="border: 1px dashed gray;"></canvas>
+<canvas id="canvas1" width="200" height="300" style="border: 1px dashed gray;"></canvas>
+<canvas id="canvas2" width="200" height="300" style="border: 1px dashed gray;"></canvas>
+<canvas id="canvas3" width="500" height="300" style="border: 1px dashed gray;"></canvas>
 <div>鼠标位置：<span id="text"></span></div>
+<div>鼠标与中心的距离：<span id="text1"></span></div>
+<canvas id="canvas4" width="300" height="300" style="border: 1px dashed gray;"></canvas>
+<canvas id="canvas5" width="300" height="300" style="border: 1px dashed gray;"></canvas>
+<canvas id="canvas6" width="300" height="300" style="border: 1px dashed gray;"></canvas>
 </body>
 <script src="tool.js"></script>
+<script src="arrow.js"></script>
+<script src="ball.js"></script>
 <script type="application/javascript">
     window.onload = function () {
         // 鼠标事件
         const cnv = document.getElementById("canvas");
-        const text = document.getElementById("text");
         const cxt = cnv.getContext("2d");
+        const text = document.getElementById("text");
         const mouse = tool.getMouse(cnv);
+
+        // Math.sqrt求平方根
         cnv.addEventListener("mousemove",function (){
-            text.innerHTML = `(${mouse.x},${mouse.y})`
+            text.innerHTML = `(${mouse.x},${mouse.y})`;
+            /*const pointDistance = Math.sqrt(mouse.x*mouse.x+mouse.y*mouse.y);
+            cxt.beginPath();
+            cxt.clearRect(0,0,cnv.width,cnv.height);
+            cxt.strokeStyle = "blue";
+            cxt.moveTo(0,0);
+            cxt.lineTo(mouse.x,mouse.y);
+            cxt.stroke();
+            text1.innerHTML = `${pointDistance}`;*/
         },false)
         // 键盘事件
         let x = cnv.width/2;
@@ -49,13 +68,140 @@
         });
         // 循环事件
         // canvas动画原理：使用requestAnimationFrame不断清除canvas，然后重新绘制
+        // cancelAnimationFrame可终止动画
         (function frame() {
-            window.requestAnimationFrame(frame);
+            const stop = window.requestAnimationFrame(frame);
             cxt.clearRect(0,0,cnv.width,cnv.height);
             tool.drawBall(cxt,x,y);
-            if(x<380) x++;
-            else x=0
+            if(x>cnv.width + 10){
+                x = -10;
+            }else{
+                x++;
+            }
+            /*if(x<380) x++;
+            else window.cancelAnimationFrame(stop);*/
+        })();
+
+        // 箭头指向鼠标方向
+        const cnv1 = document.getElementById("canvas1");
+        const cxt1 = cnv1.getContext("2d");
+        const text1 = document.getElementById("text1");
+        const mouse1 = tool.getMouse(cnv1);
+        let arrow = new Arrow(cnv1.width/2,cnv1.height/2);
+        (function drawFrame(){
+            window.requestAnimationFrame(drawFrame);
+            cxt1.clearRect(0,0,cnv1.width,cnv1.height);
+            let dx = mouse1.x - cnv1.width/2;
+            let dy = mouse1.y - cnv1.height/2;
+            arrow.angle = Math.atan2(dy,dx);
+            arrow.fill(cxt1)
+        })();
+
+        //小球旋转
+        const cnv2 = document.getElementById("canvas2");
+        const cxt2 = cnv2.getContext("2d");
+        const radiusX = 60;
+        const radiusY = 40;
+        const centerX = cnv2.width/2;
+        const centerY = cnv2.height/2;
+        const radius = 50;
+        let angle = 0;
+        let spinBall = new Ball(250,0);
+        (function spinningBall(){
+            window.requestAnimationFrame(spinningBall);
+            cxt2.clearRect(0,0,cnv2.width,cnv2.height);
+            if(Math.floor(angle/(2*Math.PI))%2===0){
+                cxt2.beginPath();
+                cxt2.arc(centerX,centerY,radius,0,360*Math.PI/180,false);
+                cxt2.closePath();
+                cxt2.stroke();
+                spinBall.x = centerX + radius * Math.cos(angle);
+                spinBall.y = centerY + radius * Math.sin(angle);
+            } else{
+                cxt2.beginPath();
+                // 画椭圆 (中心坐标x，中心坐标Y，半径x，半径y，旋转角度，开始角度，结束角度，旋转方向)
+                cxt2.ellipse(centerX,centerY,radiusX,radiusY,360*Math.PI/180,0,360*Math.PI/180,false);
+                cxt2.closePath();
+                cxt2.stroke();
+                spinBall.x = centerX + radiusX * Math.cos(angle);
+                spinBall.y = centerY + radiusY * Math.sin(angle);
+            }
+            spinBall.fill(cxt2);
+            angle += 0.05;
+        })();
+
+        // 波形运动(正弦余弦应用)
+        // 平滑运动-作用于x轴----x = centerX + Math.sin(angle)*range
+        // 线性运动-作用于y轴----y = centerX + Math.sin(angle)*range
+        // 脉冲运动-缩放属性----x = y = 1 + Math.sin(angle)*range
+        const cnv3 = document.getElementById("canvas3");
+        const cxt3 = cnv3.getContext("2d");
+        let angle3 = 0; // 角度
+        let range = 40; // 振幅
+        let ball = new Ball(0,cnv3.height/2);
+        (function wave(){
+            window.requestAnimationFrame(wave);
+            cxt3.clearRect(0,0,cnv3.width,cnv3.height);
+            ball.x += 1;
+            ball.y = cnv3.height/2 + Math.sin(angle3) * range;
+            ball.fill(cxt3);
+            if(ball.x<480) angle3 += 0.05;
+            else ball.x = 0;
         })()
+
+        const cnv4 = document.getElementById("canvas4");
+        const cxt4 = cnv4.getContext("2d");
+        const centerX4 = cnv4.width/2;
+        const centerY4 = cnv4.height/2;
+        const ball4 = new Ball(centerX4,centerY4,25);
+        let angle4 = 0;
+        let range4 = 0.5;
+        (function pulse(){
+            window.requestAnimationFrame(pulse);
+            cxt4.clearRect(0,0,cnv4.width,cnv4.height);
+            ball4.scaleX = 1 + Math.sin(angle4) * range4;
+            ball4.scaleY = 1 + Math.sin(angle4) * range4;
+            ball4.fill(cxt4);
+            angle4 += 0.05;
+        }())
+
+        // 箭头做匀速运动
+        const cnv5 = document.getElementById("canvas5");
+        const cxt5 = cnv5.getContext("2d");
+        const center5X = cnv5.width/2;
+        const center5Y = cnv5.height/2;
+        const mouse5 = tool.getMouse(cnv5);
+        const speed = 2;
+        let arrow5 = new Arrow(center5X,center5Y);
+        (function uniformSpeed(){
+            window.requestAnimationFrame(uniformSpeed);
+            cxt5.clearRect(0,0,cnv5.width,cnv5.height);
+            let dx5 = mouse5.x - center5X;
+            let dy5 = mouse5.y - center5X;
+            arrow5.angle = Math.atan2(dy5,dx5);
+            arrow5.x += speed * Math.cos(arrow5.angle);
+            arrow5.y += speed * Math.sin(arrow5.angle);
+            arrow5.fill(cxt5);
+        })();
+
+        // 重力
+        const cnv6 = document.getElementById("canvas6");
+        const cxt6 = cnv6.getContext("2d");
+        const ball6 = new Ball(cnv6.width/2,0);
+        let vy = 0;
+        let a = 0.2;
+        let bounce = -0.8;
+        (function gravity(){
+            window.requestAnimationFrame(gravity);
+            cxt6.clearRect(0,0,cnv6.width,cnv6.height);
+            ball6.y += vy;
+            if(ball6.y > cnv6.height - ball.radius){
+                ball6.y = cnv6.height - ball.radius;
+                vy *= bounce;
+            }
+            ball6.fill(cxt6);
+            vy += a;
+        })();
     }
 </script>
 </html>
